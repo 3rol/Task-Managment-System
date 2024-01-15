@@ -1,92 +1,84 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
-using TaskManagmentAPI.Models;
 using TaskManagmentAPI.Dtos;
+using TaskManagmentAPI.Interfaces;
+using TaskManagmentAPI.Models;
 
 namespace TaskManagmentAPI.Controllers
 {
-
     [Route("api/[controller]")]
     [ApiController]
-    public class TaskItemsController : Controller
+    public class TaskItemsController : ControllerBase
     {
-        private readonly TaskManagmentContext _context;
+        private readonly ITaskItemService _taskItemService;
 
-        public TaskItemsController(TaskManagmentContext context)
+        public TaskItemsController(ITaskItemService taskItemService)
         {
-            _context = context;
+            _taskItemService = taskItemService;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<TaskItem>>> Get()
+        public async Task<ActionResult<List<TaskItemDto>>> GetAllTaskItems()
         {
-            return Ok(await _context.TaskItems.ToListAsync());
+            return Ok(await _taskItemService.GetAllTaskItems());
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<List<TaskItem>>> Get(int id)
+        public async Task<ActionResult<TaskItemDto>> GetTaskItemById(int id)
         {
-            var task = await _context.TaskItems
-                .Where(t => t.UserId == id)
-                .Include(t => t.User)
-                .ToListAsync();
-
-            return task;
-            
-                    
+            try
+            {
+                var taskItem = await _taskItemService.GetTaskItemById(id);
+                return Ok(taskItem);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
-        public async Task<ActionResult<List<TaskItem>>> AddTask(TaskItemDto request)
+        public async Task<ActionResult<TaskItemDto>> AddTask(TaskItemDto taskItemDto)
         {
-            var user = await _context.User.FindAsync(request.UserId);
-            if (user == null)
-                return NotFound();
-
-            var newTaskItem = new TaskItem
+            try
             {
-                Title = request.Title,
-                Description = request.Description,
-                User = user
-            };
-
-            _context.TaskItems.Add(newTaskItem);
-            await _context.SaveChangesAsync();
-
-            return await Get(newTaskItem.UserId);
-                
+                var newTaskItem = await _taskItemService.AddTaskItem(taskItemDto);
+                return CreatedAtAction(nameof(GetTaskItemById), new { id = newTaskItem.Id }, newTaskItem);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception (e.g., user not found)
+                return BadRequest(ex.Message);
+            }
         }
 
-        [HttpPut]
-
-        public async Task<ActionResult<List<TaskItem>>> UpdateTask(UpdateTaskItemDto request)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<TaskItemDto>> UpdateTask(int id, UpdateTaskItemDto updateTaskItemDto)
         {
-            var taskitem = await _context.TaskItems.FindAsync(request.UserId);
-            if (taskitem == null)
-                return BadRequest("Task not found.");
-
-            taskitem.Title = request.Title;
-            taskitem.Description = request.Description;
-            taskitem.Priority = request.Priority;
-            taskitem.Status = request.Status;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.TaskItems.ToListAsync());
+            try
+            {
+                var updatedTaskItem = await _taskItemService.UpdateTaskItem(id, updateTaskItemDto);
+                if (updatedTaskItem == null)
+                {
+                    return NotFound();
+                }
+                return Ok(updatedTaskItem);
+            }
+            catch (Exception ex)
+            {
+                // Handle exception
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<List<TaskItem>>> DeleteTask(int id)
+        public async Task<IActionResult> DeleteTask(int id)
         {
-            var taskitem = await _context.TaskItems.FindAsync(id);
-            if (taskitem == null)
-                return BadRequest("Hero not found.");
-
-            _context.TaskItems.Remove(taskitem);
-            await _context.SaveChangesAsync();
-
-            return Ok(await _context.TaskItems.ToListAsync());
+            var success = await _taskItemService.DeleteTaskItem(id);
+            if (!success)
+            {
+                return NotFound();
+            }
+            return NoContent();
         }
-
     }
 }
