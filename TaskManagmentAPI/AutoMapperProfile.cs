@@ -8,10 +8,13 @@ namespace TaskManagmentAPI
         public AutoMapperProfile()
         {
             CreateMap<TaskItem, TaskItemDto>();
+            CreateMap<TaskItemDto, TaskItem>();
 
+            CreateMap<UpdateTaskItemDto, TaskItem>();
             CreateMap<TaskItem, UpdateTaskItemDto>();
 
-            CreateMap<TaskItemDto, TaskItem>();
+            
+            CreateMap<AddTaskItemDto, TaskItem>();
         }
     }
 }

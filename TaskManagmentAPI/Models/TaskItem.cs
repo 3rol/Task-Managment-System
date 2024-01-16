@@ -14,7 +14,7 @@ namespace TaskManagmentAPI.Models
        
         public int UserId { get; set; }
         [JsonIgnore]
-        public User User { get; set; } 
+        public User? User { get; set; } 
     }
 
 }

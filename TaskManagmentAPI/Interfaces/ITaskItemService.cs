@@ -6,7 +6,7 @@ namespace TaskManagmentAPI.Interfaces
     {
         Task<List<TaskItemDto>> GetAllTaskItems();
         Task<TaskItemDto> GetTaskItemById(int id);
-        Task<TaskItemDto> AddTaskItem(TaskItemDto taskItemDto);
+        Task<TaskItemDto> AddTaskItem(AddTaskItemDto taskItemDto);
         Task<TaskItemDto> UpdateTaskItem(int id, UpdateTaskItemDto updateTaskItemDto);
         Task<bool> DeleteTaskItem(int id);
     }

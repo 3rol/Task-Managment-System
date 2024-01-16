@@ -37,7 +37,7 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskItemDto>> AddTask(TaskItemDto taskItemDto)
+        public async Task<ActionResult<TaskItemDto>> AddTask(AddTaskItemDto taskItemDto)
         {
             try
             {
