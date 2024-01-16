@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using TaskManagmentAPI.Dtos;
 using TaskManagmentAPI.Interfaces;
 using TaskManagmentAPI.Models;
@@ -16,7 +17,7 @@ namespace TaskManagmentAPI.Controllers
             _taskItemService = taskItemService;
         }
 
-        [HttpGet]
+        [HttpGet(Name = "GetTasks"), Authorize(Roles = "Member")]
         public async Task<ActionResult<List<TaskItemDto>>> GetAllTaskItems()
         {
             return Ok(await _taskItemService.GetAllTaskItems());
@@ -37,26 +38,26 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TaskItemDto>> AddTask(AddTaskItemDto taskItemDto)
+        public async Task<ActionResult<TaskItemDto>> AddTask(AddTaskItemDto addTaskItem)
         {
             try
             {
-                var newTaskItem = await _taskItemService.AddTaskItem(taskItemDto);
+                var newTaskItem = await _taskItemService.AddTaskItem(addTaskItem);
                 return CreatedAtAction(nameof(GetTaskItemById), new { id = newTaskItem.Id }, newTaskItem);
             }
             catch (Exception ex)
             {
-                // Handle exception (e.g., user not found)
+               
                 return BadRequest(ex.Message);
             }
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<TaskItemDto>> UpdateTask(int id, UpdateTaskItemDto updateTaskItemDto)
+        public async Task<ActionResult<TaskItemDto>> UpdateTask(int id, UpdateTaskItemDto updateTaskItem)
         {
             try
             {
-                var updatedTaskItem = await _taskItemService.UpdateTaskItem(id, updateTaskItemDto);
+                var updatedTaskItem = await _taskItemService.UpdateTaskItem(id, updateTaskItem);
                 if (updatedTaskItem == null)
                 {
                     return NotFound();
@@ -65,7 +66,7 @@ namespace TaskManagmentAPI.Controllers
             }
             catch (Exception ex)
             {
-                // Handle exception
+                
                 return BadRequest(ex.Message);
             }
         }
