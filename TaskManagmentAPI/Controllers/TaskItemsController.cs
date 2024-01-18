@@ -17,7 +17,7 @@ namespace TaskManagmentAPI.Controllers
             _taskItemService = taskItemService;
         }
 
-        [HttpGet(Name = "GetTasks"), Authorize(Roles = "Member")]
+        [HttpGet(Name = "GetTasks"),]
         public async Task<ActionResult<List<TaskItemDto>>> GetAllTaskItems()
         {
             return Ok(await _taskItemService.GetAllTaskItems());

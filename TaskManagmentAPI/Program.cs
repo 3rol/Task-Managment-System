@@ -33,7 +33,13 @@ builder.Services.AddSwaggerGen(options =>
 
     options.OperationFilter<SecurityRequirementsOperationFilter>();
 });
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
+
+    build.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+
+
+}));
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters
@@ -58,6 +64,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("corspolicy");
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
