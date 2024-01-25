@@ -1,6 +1,6 @@
 <div class="grid-container">
   <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
+  <mat-grid-list cols="4" rowHeight="350px">
     <ng-container *ngFor="let task of tasks">
       <mat-grid-tile [colspan]="1" [rowspan]="1">
         <mat-card class="dashboard-card">
@@ -10,17 +10,19 @@
               <mat-icon>more_vert</mat-icon>
             </button>
             <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
+              <button mat-menu-item (click)="openEditDialog(task)">Edit</button>
+              <button mat-menu-item>Delete</button>
             </mat-menu>
           </mat-card-header>
           <mat-card-content class="dashboard-card-content">
             <div>{{ task.description }}</div> 
             <div>{{task.priority}}</div>
             <div>{{task.status}}</div>
+            
           </mat-card-content>
         </mat-card>
       </mat-grid-tile>
     </ng-container>
   </mat-grid-list>
+  
 </div>

@@ -1,3 +1,27 @@
-<app-navigation></app-navigation>
 
 <router-outlet></router-outlet>
+<button (click)="initNewTask()">Create New Task</button>
+
+<table>
+  <thead>
+    <th>Name</th>
+    <th>First Name</th>
+    <th>Last Name</th>
+    <th>Place</th>
+    <th></th>
+  </thead>
+  <tbody>
+    <tr *ngFor="let task of tasks">
+      <td>{{ task.title }}</td>
+      <td>{{ task.description }}</td>
+      <td>{{ task.priority }}</td>
+      <td>{{ task.status }}</td>
+      <td><button (click)="editTask(task)">Edit</button></td>
+    </tr>
+  </tbody>
+</table>
+
+<app-task-edit
+  [task]="taskToEdit"
+  (tasksUpdated)="updateTask($event)"
+></app-task-edit>
