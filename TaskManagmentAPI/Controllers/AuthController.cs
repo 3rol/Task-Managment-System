@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -16,12 +17,21 @@ namespace TaskManagmentAPI.Controllers
     {
         private readonly TaskManagmentContext _context;
         private readonly IConfiguration _configuration;
+        private readonly IUserService _userService;
 
-        public AuthController(TaskManagmentContext context, IConfiguration configuration)
+        public AuthController(TaskManagmentContext context, IConfiguration configuration, IUserService userService)
         {
             _configuration = configuration;
             _context = context;
+            _userService = userService;
             
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMe()
+        {
+            var username = _userService.GetUsername();
+            return Ok(username);
         }
 
         [HttpPost("Register")]

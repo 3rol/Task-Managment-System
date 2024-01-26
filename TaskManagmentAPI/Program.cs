@@ -51,8 +51,10 @@ builder.Services.AddCors(p => p.AddPolicy("corspolicy", build => {
         };
     });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 var app = builder.Build();

@@ -20,6 +20,21 @@
     </tr>
   </tbody>
 </table>
+<div>
+  Name:
+  <input [(ngModel)]="user.username" placeholder="Name">
+</div>
+<div>
+  Email:
+  <input [(ngModel)]="user.email" placeholder="Email">
+</div>
+<div>
+  Password:
+  <input [(ngModel)]="user.password" placeholder="Password" type="password">
+</div>
+<button (click)="register(user)">Register</button>
+<button (click)="login(user)">Login</button>
+<button (click)="getUsername()">Get Me</button>
 
 <app-task-edit
   [task]="taskToEdit"
