@@ -55,6 +55,9 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ITaskItemRepository, TaskItemRepository>();
 builder.Services.AddScoped<ITaskItemService, TaskItemService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IListRepository, ListRepository>();
+builder.Services.AddScoped<IListService, ListService>();
+
 
 
 var app = builder.Build();

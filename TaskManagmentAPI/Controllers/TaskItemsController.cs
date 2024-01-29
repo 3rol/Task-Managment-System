@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using TaskManagmentAPI.Dtos;
 using TaskManagmentAPI.Interfaces;
 using TaskManagmentAPI.Models;
+using System.Linq;
+using System.Security.Claims;
 
 namespace TaskManagmentAPI.Controllers
 {
@@ -11,10 +13,23 @@ namespace TaskManagmentAPI.Controllers
     public class TaskItemsController : ControllerBase
     {
         private readonly ITaskItemService _taskItemService;
+        
 
         public TaskItemsController(ITaskItemService taskItemService)
         {
             _taskItemService = taskItemService;
+            
+        }
+        private int GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+
+            if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+            {
+                return userId;
+            }
+
+            throw new InvalidOperationException("Unable to determine the current user's UserId.");
         }
 
         [HttpGet(Name = "GetTasks"),]
@@ -38,16 +53,17 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<TaskItemDto>> AddTask(AddTaskItemDto addTaskItem)
         {
             try
             {
-                var newTaskItem = await _taskItemService.AddTaskItem(addTaskItem);
+                int userId = GetCurrentUserId();
+                var newTaskItem = await _taskItemService.AddTaskItem(addTaskItem, userId);
                 return CreatedAtAction(nameof(GetTaskItemById), new { id = newTaskItem.Id }, newTaskItem);
             }
             catch (Exception ex)
             {
-               
                 return BadRequest(ex.Message);
             }
         }

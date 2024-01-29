@@ -15,6 +15,14 @@ namespace TaskManagmentAPI
 
             
             CreateMap<AddTaskItemDto, TaskItem>();
+
+            CreateMap<List, ListDto>();
+            CreateMap<ListDto, List>();
+
+            CreateMap<UpdateListDto, List>();
+            CreateMap<List, UpdateListDto>();
+
+            CreateMap<AddListDto, List>();
         }
     }
 }
