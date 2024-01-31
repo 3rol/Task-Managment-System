@@ -13,10 +13,6 @@ namespace TaskManagmentAPI.Models
         public string Priority { get; set; } = string.Empty;
         public bool IsCompleted { get; set; }
 
-        public int ListId { get; set; }
-        [JsonIgnore]
-        public List? List { get; set; }
-
         public int UserId { get; set; }
         [JsonIgnore]
         public User? User { get; set; }

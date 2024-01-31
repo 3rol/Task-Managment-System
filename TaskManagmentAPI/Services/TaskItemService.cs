@@ -14,16 +14,16 @@ namespace TaskManagmentAPI.Services
         private readonly IMapper _mapper;
         private readonly ILogger<TaskItemService> _logger;
         private readonly TaskManagmentContext _context;
-        private readonly IListService _listService;
+
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public TaskItemService(ITaskItemRepository taskItemRepository, IMapper mapper, TaskManagmentContext context, ILogger<TaskItemService> logger, IListService listService, IHttpContextAccessor httpContextAccessor)
+        public TaskItemService(ITaskItemRepository taskItemRepository, IMapper mapper, TaskManagmentContext context, ILogger<TaskItemService> logger, IHttpContextAccessor httpContextAccessor)
         {
             _taskItemRepository = taskItemRepository;
             _mapper = mapper;
             _context = context;
             _logger = logger;
-            _listService = listService;
+          
             _httpContextAccessor = httpContextAccessor;
         }
 
@@ -43,12 +43,11 @@ namespace TaskManagmentAPI.Services
         {
             try
             {
-                int listId = await _listService.GetListIdByUserId(userId);
+                
 
                 var taskItem = _mapper.Map<TaskItem>(taskItemDto);
                 taskItem.UserId = userId;
-                taskItem.ListId = listId;
-
+             
                 _context.TaskItems.Add(taskItem);
                 await _context.SaveChangesAsync();
 

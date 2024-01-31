@@ -33,12 +33,15 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpGet(Name = "GetTasks"),]
+        [Authorize]
+
         public async Task<ActionResult<List<TaskItemDto>>> GetAllTaskItems()
         {
             return Ok(await _taskItemService.GetAllTaskItems());
         }
 
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<ActionResult<TaskItemDto>> GetTaskItemById(int id)
         {
             try
@@ -69,6 +72,7 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<ActionResult<TaskItemDto>> UpdateTask(int id, UpdateTaskItemDto updateTaskItem)
         {
             try
@@ -88,6 +92,7 @@ namespace TaskManagmentAPI.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteTask(int id)
         {
             var success = await _taskItemService.DeleteTaskItem(id);

@@ -9,18 +9,8 @@ namespace TaskManagmentAPI.Data
 
         public DbSet<TaskItem> TaskItems { get; set; }
         public DbSet<User> User { get; set; }
-        public DbSet<List> Lists { get; set; }
+        
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            modelBuilder.Entity<List>()
-                .HasMany(l => l.Tasks)
-                .WithOne(ti => ti.List)
-                .HasForeignKey(ti => ti.ListId)
-                .OnDelete(DeleteBehavior.Cascade);
-
-
-            base.OnModelCreating(modelBuilder);
-        }
+        
     }
 }

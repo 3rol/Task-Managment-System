@@ -20,7 +20,7 @@ namespace TaskManagmentAPI.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserService _userService;
         private readonly ILogger<AuthController> _logger;
-
+        private static readonly List<string> RevokedTokens = new List<string>();
         public AuthController(TaskManagmentContext context, IConfiguration configuration, IUserService userService, ILogger<AuthController> logger)
         {
             _configuration = configuration;
@@ -33,28 +33,8 @@ namespace TaskManagmentAPI.Controllers
         [HttpGet, Authorize]
         public ActionResult<string> GetMe()
         {
-            try
-            {
-                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
-
-                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
-                {
-                    
-                    return Ok(userId);
-                }
-
-                // Log if the user ID claim is missing or invalid
-                _logger.LogError("Unable to determine the current user's UserId. UserIdClaim: {UserIdClaim}", userIdClaim?.Value);
-
-                // Return an error response
-                return BadRequest(userIdClaim?.Value);
-            }
-            catch (Exception ex)
-            {
-                // Log any unexpected exception
-                _logger.LogError(ex, "Error in GetMe: {Message}", ex.Message);
-                return StatusCode(500, "Internal Server Error");
-            }
+            var username = _userService.GetUsername();
+            return Ok(username);
         }
 
 
@@ -100,7 +80,39 @@ namespace TaskManagmentAPI.Controllers
             string token = CreateToken(user);
             return Ok(token);
         }
+        [HttpPost("Logout")]
+        [Authorize]
+        public async Task<IActionResult> Logout()
+        {
+            try
+            {
+             
+                var token = HttpContext.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
 
+                if (token == null)
+                {
+                    return BadRequest("Token not provided");
+                }
+
+              
+                if (RevokedTokens.Contains(token))
+                {
+                    return BadRequest("Token has already been revoked");
+                }
+
+                // Add the token to the list of revoked tokens
+                RevokedTokens.Add(token);
+
+               
+
+                return Ok("Logout successful");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Logout: {Message}", ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
+        }
 
 
         private string CreateToken(User user)
