@@ -29,6 +29,10 @@ namespace TaskManagmentAPI.Repositories
             }
             return taskItem;
         }
+        public async Task<List<TaskItem>> GetTaskItemsByUserId(int userId)
+        {
+            return await _context.TaskItems.Where(t => t.UserId == userId).ToListAsync();
+        }
 
         public async Task<TaskItem> AddTaskItem(TaskItemDto taskItemDto)
         {

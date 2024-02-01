@@ -8,12 +8,19 @@ import { TaskItem } from 'src/models/taskitem.model';
 })
 export class TaskService {
   private apiUrl = 'https://localhost:7082/api/TaskItems'; 
-  
 
   constructor(private http: HttpClient) {}
 
   public getTaskItems(): Observable<TaskItem[]> {
     return this.http.get<TaskItem[]>(`${this.apiUrl}`);
+  }
+  
+  public getTaskItemsByUserId(userId: number): Observable<TaskItem[]> {
+    return this.http.get<TaskItem[]>(`${this.apiUrl}/user`);
+  }
+  
+  public getTaskById(taskId: number): Observable<TaskItem> {
+    return this.http.get<TaskItem>(`${this.apiUrl}/${taskId}`);
   }
 
   public updateTask(task: TaskItem): Observable<TaskItem[]> {

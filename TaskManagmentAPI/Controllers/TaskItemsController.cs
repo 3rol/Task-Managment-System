@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace TaskManagmentAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]"), Authorize]
     [ApiController]
     public class TaskItemsController : ControllerBase
     {
@@ -32,16 +32,18 @@ namespace TaskManagmentAPI.Controllers
             throw new InvalidOperationException("Unable to determine the current user's UserId.");
         }
 
-        [HttpGet(Name = "GetTasks"),]
-        [Authorize]
+        [HttpGet(Name = "GetTasks"), Authorize]
+        
 
         public async Task<ActionResult<List<TaskItemDto>>> GetAllTaskItems()
         {
+            int userId = GetCurrentUserId();
             return Ok(await _taskItemService.GetAllTaskItems());
         }
 
-        [HttpGet("{id}")]
-        [Authorize]
+        [HttpGet("{id}"), Authorize]
+        
+
         public async Task<ActionResult<TaskItemDto>> GetTaskItemById(int id)
         {
             try
@@ -55,8 +57,17 @@ namespace TaskManagmentAPI.Controllers
             }
         }
 
-        [HttpPost]
-        [Authorize]
+        [HttpGet("user"), Authorize]
+        public async Task<ActionResult<List<TaskItemDto>>> GetTaskItemsByUserId()
+        {
+            int userId = GetCurrentUserId();
+            var taskItems = await _taskItemService.GetTaskItemsByUserId(userId);
+            return Ok(taskItems);
+        }
+
+        [HttpPost, Authorize]
+        
+        
         public async Task<ActionResult<TaskItemDto>> AddTask(AddTaskItemDto addTaskItem)
         {
             try
@@ -71,8 +82,8 @@ namespace TaskManagmentAPI.Controllers
             }
         }
 
-        [HttpPut("{id}")]
-        [Authorize]
+        [HttpPut("{id}"), Authorize]
+        
         public async Task<ActionResult<TaskItemDto>> UpdateTask(int id, UpdateTaskItemDto updateTaskItem)
         {
             try
@@ -91,8 +102,8 @@ namespace TaskManagmentAPI.Controllers
             }
         }
 
-        [HttpDelete("{id}")]
-        [Authorize]
+        [HttpDelete("{id}"), Authorize]
+        
         public async Task<IActionResult> DeleteTask(int id)
         {
             var success = await _taskItemService.DeleteTaskItem(id);
@@ -102,5 +113,6 @@ namespace TaskManagmentAPI.Controllers
             }
             return NoContent();
         }
+
     }
 }

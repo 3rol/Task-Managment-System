@@ -18,9 +18,9 @@ export class AppComponent {
   constructor(private taskService: TaskService, private authService: AuthService) {}
 
   ngOnInit(): void {
-    this.taskService
-      .getTaskItems()
-      .subscribe((result: TaskItem[]) => (this.tasks = result));
+    // this.taskService
+    //   .getTaskItems()
+    //   .subscribe((result: TaskItem[]) => (this.tasks = result));
   }
 
   updateTask(tasks: TaskItem[]) {
@@ -31,9 +31,6 @@ export class AppComponent {
     this.taskToEdit = new TaskItem();
   }
 
-  editTask(task: TaskItem) {
-    this.taskToEdit = task;
-  }
 
   register(user: User) {
     this.authService.register(user).subscribe(() => {
@@ -50,7 +47,7 @@ export class AppComponent {
   }
 
   getUsername() {
-    this.authService.getUsername().subscribe((name: string) => {
+    this.authService.getUserId().subscribe((name: string) => {
       console.log('Logged in as: ' + name);
     });
   }

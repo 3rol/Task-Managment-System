@@ -29,12 +29,39 @@ namespace TaskManagmentAPI.Controllers
             _logger = logger;
 
         }
-
-        [HttpGet, Authorize]
+        [HttpGet("GetUsername"), Authorize]
         public ActionResult<string> GetMe()
         {
             var username = _userService.GetUsername();
             return Ok(username);
+        }
+
+
+        [HttpGet, Authorize]
+        public ActionResult<string> GetUserId()
+        {
+            try
+            {
+                var userIdClaim = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (userIdClaim != null && int.TryParse(userIdClaim.Value, out int userId))
+                {
+
+                    return Ok(userId);
+                }
+
+                // Log if the user ID claim is missing or invalid
+                _logger.LogError("Unable to determine the current user's UserId. UserIdClaim: {UserIdClaim}", userIdClaim?.Value);
+
+                // Return an error response
+                return BadRequest(userIdClaim?.Value);
+            }
+            catch (Exception ex)
+            {
+                // Log any unexpected exception
+                _logger.LogError(ex, "Error in GetMe: {Message}", ex.Message);
+                return StatusCode(500, "Internal Server Error");
+            }
         }
 
 

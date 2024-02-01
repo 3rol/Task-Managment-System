@@ -1,0 +1,9 @@
+.low-priority { color: green; }
+.medium-priority { color: orange; }
+.high-priority { color: red; }
+
+.select option:checked { color: inherit; }
+
+.priority-label {
+    font-size: 1.5em;
+}

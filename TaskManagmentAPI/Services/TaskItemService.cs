@@ -39,13 +39,21 @@ namespace TaskManagmentAPI.Services
             return _mapper.Map<TaskItemDto>(taskItem);
         }
 
+        public async Task<List<TaskItemDto>> GetTaskItemsByUserId(int userId)
+        {
+            var taskItems = await _taskItemRepository.GetTaskItemsByUserId(userId);
+            return _mapper.Map<List<TaskItemDto>>(taskItems);
+        }
+
+
         public async Task<TaskItemDto> AddTaskItem(AddTaskItemDto taskItemDto, int userId)
         {
             try
             {
-                
 
+                
                 var taskItem = _mapper.Map<TaskItem>(taskItemDto);
+                taskItem.IsCompleted = false;
                 taskItem.UserId = userId;
              
                 _context.TaskItems.Add(taskItem);
