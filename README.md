@@ -21,7 +21,13 @@ To get a local copy up and running, follow these simple steps:
 2. Navigate to the project directory
 3. Navigate to the backend directory (TaskManagmentAPI) and run the .NET project: `cd TaskManagmentAPI`, `dotnet run`
 4. Navigate to the frontend directory (TaskManagmentFrontend) and install dependencies: `cd TaskManagmentFrontend`, `npm install`
-5. Start the Angular development server: `ng serve`
+5. Install Bulma for styling:
+   - **via npm:** `npm install bulma`
+   - **via CDN:** Include the following link in your HTML files:
+     ```
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.3/css/bulma.min.css">
+     ```
+6. Start the Angular development server: `ng serve`
 
 ## Database Storage
 
