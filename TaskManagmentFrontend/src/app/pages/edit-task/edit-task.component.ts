@@ -10,7 +10,8 @@ import { Params, ActivatedRoute, Router } from '@angular/router';
 })
 export class EditTaskComponent implements OnInit {
   @Input() task?: TaskItem;
-  @Output() tasksUpdated = new EventEmitter<TaskItem[]>();
+  @Output() tasksUpdated = new EventEmitter<TaskItem>();
+
   // tasks: TaskItem[] = [];
   // taskToEdit?: TaskItem;
 
@@ -32,8 +33,8 @@ export class EditTaskComponent implements OnInit {
 
   updateTask(task: TaskItem) {
     if (task) { 
-      this.taskService.updateTask(task).subscribe((tasks: TaskItem[]) => {
-        this.tasksUpdated.emit(tasks);
+      this.taskService.updateTask(task).subscribe((updatedTask: TaskItem) => {
+        this.tasksUpdated.emit(updatedTask);
         this.router.navigate(['/tasks'])
       });
     }

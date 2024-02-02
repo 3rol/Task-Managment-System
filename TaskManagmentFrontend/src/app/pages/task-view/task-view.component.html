@@ -36,21 +36,23 @@
 
       <!-- Task Elements -->
       <div *ngIf="tasks && tasks.length > 0">
-        <div class="task" *ngFor="let task of tasks">
-          <div class="task-text" *ngIf="task.userId === loggedInUserId">
-            <p>{{ task.title }}</p>
-          </div>
-          <div class="task-buttons" *ngIf="task.userId === loggedInUserId">
-            <button class="button" [routerLink]="['/edit-task', task.id]" [queryParams]="{ task: task }">
-              <div class="icon">
-                <i class="fas fa-edit"></i>
-              </div>
-            </button>
-            <button (click)="deleteTask(task)" class="button is-danger" style="margin-left: 10px;">
-              <div class="icon">
-                <i class="fas fa-trash"></i>
-              </div>
-            </button>
+        <div *ngFor="let task of tasks">
+          <div class="task" [class.completed]="task.isCompleted" (click)="toggleTaskCompletion(task)">
+            <div class="task-text">
+              <p [class.completed]="task.isCompleted">{{ task.title }}</p>
+            </div>
+            <div class="task-buttons" *ngIf="task.userId === loggedInUserId">
+              <button class="button" [routerLink]="['/edit-task', task.id]" [queryParams]="{ task: task }">
+                <div class="icon">
+                  <i class="fas fa-edit"></i>
+                </div>
+              </button>
+              <button (click)="deleteTask(task)" class="button is-danger" style="margin-left: 10px;">
+                <div class="icon">
+                  <i class="fas fa-trash"></i>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>

@@ -23,8 +23,8 @@ export class TaskService {
     return this.http.get<TaskItem>(`${this.apiUrl}/${taskId}`);
   }
 
-  public updateTask(task: TaskItem): Observable<TaskItem[]> {
-    return this.http.put<TaskItem[]>(
+  public updateTask(task: TaskItem): Observable<TaskItem> {
+    return this.http.put<TaskItem>(
       `${this.apiUrl}/${task.id}`,
       task
     );

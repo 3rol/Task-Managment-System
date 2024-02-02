@@ -40,14 +40,20 @@ export class TaskViewComponent implements OnInit {
   
 
   deleteTask(task: TaskItem) {
-    
     this.taskService.deleteTask(task).subscribe(() => {
       this.refreshTasks();
     });
   }
 
+  toggleTaskCompletion(task: TaskItem) {
+    task.isCompleted = !task.isCompleted; 
+    this.taskService.updateTask(task).subscribe(() => {
+      console.log(task)
+      this.refreshTasks();
+    });
+  }
+
   refreshTasks() {
-    
     this.authService.getUserId().subscribe(id => {
       const userId = parseInt(id);
       this.taskService.getTaskItemsByUserId(userId).subscribe(tasks => {

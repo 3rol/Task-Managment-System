@@ -5,5 +5,5 @@ export class TaskItem {
     public description= "";
     public dueDate= "";
     public priority= "";
-    public status= "";
+    public isCompleted!: boolean;
 }
